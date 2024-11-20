@@ -61,7 +61,7 @@ spec:
       certificates:
         - name: domain-0-wildcard
           enabled: true
-          certificateIssuer: "${DOMAIN_0}-prod"
+          certificateIssuer: "${DOMAIN_0_BASE}-prod"
           hosts:
             - ${DOMAIN_0}
             - '*.${DOMAIN_0}'

@@ -1,0 +1,138 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: gitea
+  namespace: gitea
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: gitea
+      version: 19.1.11
+      sourceRef:
+        kind: HelmRepository
+        name: truecharts
+        namespace: flux-system
+  values:
+    # admin:
+    #   email: ${DOMAIN_0_EMAIL}
+    #   password: ${GITEA_PASSWORD}
+    #   username: ${DEFAULT_USER}
+    # cnpg:
+    #   main:
+    #     backups:
+    #       credentials: minio
+    #       enabled: true
+    #     cluster:
+    #       instances: 1
+    #       singleNode: true
+    #     mode: standalone
+    #     password: ${CNPG_PASSWORD}
+    # credentials:
+    #   minio:
+    #     accessKey: ${S3_ACCESS_KEY}
+    #     bucket: backup
+    #     encrKey: ${S3_ENCR_KEY}
+    #     name: minio
+    #     secretKey: ${S3_SECRET_KEY}
+    #     type: s3
+    #     url: ${S3_URL}
+    config:
+      ALLOWED_HOST_LIST: 127.0.0.1
+      APP_NAME: Gitea
+      RUN_MODE: prod
+      nodeIP: 192.168.1.107
+      customConfig:
+        - keys:
+          - name: ENABLED
+            value: "true"
+          - name: FROM
+            value: gitea@${DOMAIN_0}
+          - name: SMTP_ADDR
+            value: smtp.ionos.fr
+          - name: PORT
+            value: "465"
+          - name: USER
+            value: ${DOMAIN_0_EMAIL}
+          - name: PASSWD
+            value: ${SMTP_PASSWORD}
+          name: mailer
+    ingress:
+      main:
+        enabled: true
+        hosts:
+          - host: gitea.${DOMAIN_0}
+            paths:
+              - path: /
+                pathType: Prefix
+        integrations:
+          certManager:
+            certificateIssuer: "${DOMAIN_0_BASE}-prod"
+            enabled: true
+          homepage:
+            enabled: true
+            group: Dev
+            widget:
+              custom:
+                key: "${GITEA_HOMEPAGE_TOKEN}"
+              enabled: true
+          traefik:
+            enabled: true
+            entrypoints:
+              - websecure
+    customConfig:
+      - keys:
+        - name: ENABLED
+          value: "true"
+        - name: FROM
+          value: gitea@${DOMAIN_0}
+        - name: SMTP_ADDR
+          value: smtp.ionos.fr
+        - name: PORT
+          value: "465"
+        - name: USER
+          value: ${DOMAIN_0_EMAIL}
+        - name: PASSWD
+          value: ${SMTP_PASSWORD}
+        name: mailer
+    ldap:
+      enabled: true
+      host: lldap-ldap.lldap.svc.cluster.local
+      port: 3890
+      userSearchBase: ou=people,dc=ldap,dc=${DOMAIN_0_BASE},dc=${DOMAIN_0_EXTENSION}
+      userFilter: (&(objectClass=person)(|(uid=%[1]s)(mail=%[1]s)))
+      adminFilter: (memberof=cn=admin,ou=groups,dc=ldap,dc=${DOMAIN_0_BASE},dc=${DOMAIN_0_EXTENSION})
+      # usernameAttribute: uid
+      # firstnameAttribute: givenName
+      # surnameAttribute: sn
+      # emailAttribute: mail
+      # avatarAttribute: jpegPhoto
+      bindDn: uid=admin,ou=people,dc=ldap,dc=${DOMAIN_0_BASE},dc=${DOMAIN_0_EXTENSION}
+      bindPassword: ${LDAP_PASSWORD}
+    # oauth:
+    #   enabled: false
+    persistence:
+      data:
+        autoPermissions:
+          enabled: false
+        enabled: true
+        mountPath: /data
+        path: "${NFS_CONTAINERS_DATA_BASE}/gitea"
+        readOnly: false
+        server: "${NFS_SERVER}"
+        targetSelectAll: true
+        type: nfs
+    service:
+      main:
+        enabled: true
+        loadBalancerIP: "192.168.1.107"
+        type: LoadBalancer
+      ssh:
+        enabled: true
+        loadBalancerIP: "192.168.1.107"
+        ports:
+          ssh:
+            enabled: true
+            port: 2222
+            targetPort: 2222
+        type: LoadBalancer

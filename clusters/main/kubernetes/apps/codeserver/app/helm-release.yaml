@@ -1,60 +1,62 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: codeserver
-  namespace: codeserver
+    name: codeserver
+    namespace: codeserver
 spec:
-  interval: 15m
-  chart:
-    spec:
-      chart: code-server
-      version: 12.1.6
-      sourceRef:
-        kind: HelmRepository
-        name: truecharts
-        namespace: flux-system
-  releaseName: codeserver
-  values:
-    # Disabled until I go back home and verify it works
-    # ingress:
-    #     main:
-    #         enabled: true
-    #         integrations:
-    #             traefik:
-    #                 enabled: true
-    #                 entrypoints:
-    #                     - websecure
-    #             certManager:
-    #                 certificateIssuer: "${DOMAIN_0}-prod"
-    #                 enabled: true
-    #         hosts:
-    #             - host: codeserver.${DOMAIN_0}
-    #               paths:
-    #                   - path: /
-    #                     pathType: Prefix
-    # Temporary until I go back home
-    service:
-      main:
-        type: LoadBalancer
-        loadBalancerIP: 192.168.1.105
-        ports:
-          main:
-            port: 80
-    credentials:
-      minio:
-        type: s3
-        url: "${S3_URL}"
-        bucket: backup
-        accessKey: "${S3_ACCESS_KEY}"
-        encrKey: "${S3_ENCR_KEY}"
-        secretKey: "${S3_SECRET_KEY}"
-    persistence:
-      config:
-        volsync:
-        - name: config
-          type: restic
-          credentials: minio
-          dest:
-            enabled: true
-          src:
-            enabled: true
+    interval: 15m
+    chart:
+        spec:
+            chart: code-server
+            version: 12.1.6
+            sourceRef:
+                kind: HelmRepository
+                name: truecharts
+                namespace: flux-system
+    values:
+        ingress:
+            main:
+                enabled: true
+                integrations:
+                    traefik:
+                        enabled: true
+                        entrypoints:
+                            - websecure
+                    certManager:
+                        certificateIssuer: '${DOMAIN_0_BASE}-prod'
+                        enabled: true
+                hosts:
+                    - host: ide.${DOMAIN_0}
+                      paths:
+                          - path: /
+                            pathType: Prefix
+        persistence:
+            datastoragepath:
+                enabled: true
+                mountPath: /root
+                path: /mnt/TestPool/containers_data/vscode
+                server: '${NFS_SERVER}'
+                type: nfs
+            homepath:
+                enabled: true
+                mountPath: /home/coder/
+                path: /mnt/TestPool/home/mehdi
+                server: '${NFS_SERVER}'
+                type: nfs
+        # credentials:
+        #   minio:
+        #     type: s3
+        #     url: "${S3_URL}"
+        #     bucket: backup
+        #     accessKey: "${S3_ACCESS_KEY}"
+        #     encrKey: "${S3_ENCR_KEY}"
+        #     secretKey: "${S3_SECRET_KEY}"
+        #   config:
+        #     volsync:
+        #     - name: config
+        #       type: restic
+        #       credentials: minio
+        #       dest:
+        #         enabled: true
+        #       src:
+        #         enabled: true

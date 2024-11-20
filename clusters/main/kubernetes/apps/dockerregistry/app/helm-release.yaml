@@ -13,37 +13,27 @@ spec:
         kind: HelmRepository
         name: truecharts
         namespace: flux-system
-  releaseName: dockerregistry
   values:
-    # Disabled until I go back home and verify it works
-    # ingress:
-    #     main:
-    #         enabled: true
-    #         integrations:
-    #             traefik:
-    #                 enabled: true
-    #                 entrypoints:
-    #                     - websecure
-    #             certManager:
-    #                 certificateIssuer: "${DOMAIN_0}-prod"
-    #                 enabled: true
-    #         hosts:
-    #             - host: codeserver.${DOMAIN_0}
-    #               paths:
-    #                   - path: /
-    #                     pathType: Prefix
-    # Temporary until I go back home
-    service:
+    ingress:
       main:
-        type: LoadBalancer
-        loadBalancerIP: 192.168.1.106
-        ports:
-          main:
-            port: 80
+        enabled: true
+        integrations:
+          traefik:
+            enabled: true
+            entrypoints:
+              - websecure
+          certManager:
+            certificateIssuer: "${DOMAIN_0_BASE}-prod"
+            enabled: true
+        hosts:
+          - host: registry.${DOMAIN_0}
+            paths:
+              - path: /
+                pathType: Prefix
     persistence:
       datastoragepath:
         enabled: true
         mountPath: /var/lib/registry
         path: /mnt/TestPool/share/docker_imgs
-        server: 192.168.1.2
+        server: "${NFS_SERVER}"
         type: nfs
