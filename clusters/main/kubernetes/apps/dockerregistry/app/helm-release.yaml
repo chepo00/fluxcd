@@ -1,19 +1,19 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: homepage
-  namespace: homepage
+  name: dockerregistry
+  namespace: dockerregistry
 spec:
   interval: 15m
   chart:
     spec:
-      chart: homepage
-      version: 8.0.9
+      chart: dockerregistry
+      version: 6.0.10
       sourceRef:
         kind: HelmRepository
         name: truecharts
         namespace: flux-system
-  releaseName: homepage
+  releaseName: dockerregistry
   values:
     # Disabled until I go back home and verify it works
     # ingress:
@@ -28,7 +28,7 @@ spec:
     #                 certificateIssuer: "${DOMAIN_0}-prod"
     #                 enabled: true
     #         hosts:
-    #             - host: homepage.${DOMAIN_0}
+    #             - host: codeserver.${DOMAIN_0}
     #               paths:
     #                   - path: /
     #                     pathType: Prefix
@@ -36,25 +36,14 @@ spec:
     service:
       main:
         type: LoadBalancer
-        loadBalancerIP: 192.168.1.104
+        loadBalancerIP: 192.168.1.106
         ports:
           main:
             port: 80
-    credentials:
-      minio:
-        type: s3
-        url: "${S3_URL}"
-        bucket: backup
-        accessKey: "${S3_ACCESS_KEY}"
-        encrKey: "${S3_ENCR_KEY}"
-        secretKey: "${S3_SECRET_KEY}"
     persistence:
-      config:
-        volsync:
-        - name: config
-          type: restic
-          credentials: minio
-          dest:
-            enabled: true
-          src:
-            enabled: true
+      datastoragepath:
+        enabled: true
+        mountPath: /var/lib/registry
+        path: /mnt/TestPool/share/docker_imgs
+        server: 192.168.1.2
+        type: nfs
