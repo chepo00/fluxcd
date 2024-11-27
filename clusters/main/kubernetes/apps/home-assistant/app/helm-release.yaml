@@ -20,12 +20,9 @@ spec:
                 enabled: true
                 hosts:
                     - host: home.${DOMAIN_0}
-                      paths:
-                        - path: /
-                          pathType: Prefix
                 integrations:
                     certManager:
-                        certificateIssuer: "${DOMAIN_0_BASE}-prod"
+                        certificateIssuer: '${DOMAIN_0_BASE}-prod'
                         enabled: true
                     homepage:
                         enabled: true
@@ -35,15 +32,6 @@ spec:
                         enabled: true
                         entrypoints:
                             - websecure
-        # credentials:
-        #     minio:
-        #         accessKey: ${S3_ACCESS_KEY}
-        #         bucket: backup
-        #         encrKey: ${S3_ENCR_KEY}
-        #         name: minio
-        #         secretKey: ${S3_SECRET_KEY}
-        #         type: s3
-        #         url: ${S3_URL}
         cnpg:
             main:
                 enabled: true
@@ -58,6 +46,15 @@ spec:
                 # cluster:
                 #     instances: 1
                 #     singleNode: true
+        # credentials:
+        #     minio:
+        #         accessKey: ${S3_ACCESS_KEY}
+        #         bucket: backup
+        #         encrKey: ${S3_ENCR_KEY}
+        #         name: minio
+        #         secretKey: ${S3_SECRET_KEY}
+        #         type: s3
+        #         url: ${S3_URL}
         persistence:
             config:
                 enabled: true

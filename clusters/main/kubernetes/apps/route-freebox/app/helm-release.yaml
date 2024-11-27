@@ -1,0 +1,40 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+    name: route-freebox
+    namespace: route-freebox
+spec:
+    interval: 15m
+    chart:
+        spec:
+            chart: external-service
+            version: 14.1.2
+            sourceRef:
+                kind: HelmRepository
+                name: truecharts
+                namespace: flux-system
+    releaseName: route-freebox
+    values:
+        ingress:
+            main:
+                enabled: true
+                hosts:
+                    - host: freebox.${DOMAIN_0}
+                integrations:
+                    certManager:
+                        certificateIssuer: '${DOMAIN_0_BASE}-prod'
+                        enabled: true
+                    traefik:
+                        enabled: true
+                        entrypoints:
+                            - websecure
+        service:
+            main:
+                enabled: true
+                type: ExternalIP
+                externalIP: 192.168.1.254
+                ports:
+                    main:
+                        enabled: true
+                        port: 443
+                        protocol: https

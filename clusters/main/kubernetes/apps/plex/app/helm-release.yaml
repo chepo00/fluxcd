@@ -1,46 +1,46 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: plex
-  namespace: plex
+    name: plex
+    namespace: plex
 spec:
-  interval: 15m
-  chart:
-    spec:
-      chart: plex
-      version: 18.0.12
-      sourceRef:
-        kind: HelmRepository
-        name: truecharts
-        namespace: flux-system
-  values:
-    service:
-      main:
-        type: LoadBalancer
-        loadBalancerIP: 192.168.1.110
-    # credentials:
-    #   minio:
-    #     type: s3
-    #     url: "${S3_URL}"
-    #     bucket: backup
-    #     accessKey: "${S3_ACCESS_KEY}"
-    #     encrKey: "${S3_ENCR_KEY}"
-    #     secretKey: "${S3_SECRET_KEY}"
-    persistence:
-    #   config:
-    #     volsync:
-    #     - name: config
-    #       type: restic
-    #       credentials: minio
-    #       dest:
-    #         enabled: true
-    #       src:
-    #         enabled: true
-      datastoragepath:
-        enabled: true
-        mountPath: /data
-        path: "${MEDIA_PATH}"
-        server: "${NFS_SERVER}"
-        type: nfs
-    plex:
-      serverIP: "${PLEX_IP}"
+    interval: 15m
+    chart:
+        spec:
+            chart: plex
+            version: 18.0.12
+            sourceRef:
+                kind: HelmRepository
+                name: truecharts
+                namespace: flux-system
+    values:
+        plex:
+            serverIP: '${PLEX_IP}'
+        service:
+            main:
+                type: LoadBalancer
+                loadBalancerIP: '${PLEX_IP}'
+        persistence:
+            datastoragepath:
+                enabled: true
+                mountPath: /data
+                path: '${MEDIA_PATH}'
+                server: '${NFS_SERVER}'
+                type: nfs
+        #   config:
+        #     volsync:
+        #     - name: config
+        #       type: restic
+        #       credentials: minio
+        #       dest:
+        #         enabled: true
+        #       src:
+        #         enabled: true
+        # credentials:
+        #   minio:
+        #     type: s3
+        #     url: "${S3_URL}"
+        #     bucket: backup
+        #     accessKey: "${S3_ACCESS_KEY}"
+        #     encrKey: "${S3_ENCR_KEY}"
+        #     secretKey: "${S3_SECRET_KEY}"
