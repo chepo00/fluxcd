@@ -18,3 +18,4 @@ resources:
     - zigbee2mqtt/ks.yaml
     - cloudflared/ks.yaml
     - shorturl/ks.yaml
+    - gitea-runner/ks.yaml

@@ -1,0 +1,9 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+    name: mehdif
+    namespace: flux-system
+spec:
+    interval: 10m
+    url: https://gitea.mehdif.com/api/packages/mehdi/helm
+    timeout: 3m
