@@ -1,21 +1,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-    - authelia/ks.yaml
-    - codeserver/ks.yaml
-    - dockerregistry/ks.yaml
-    - gitea/ks.yaml
-    - home-assistant/ks.yaml
     - homepage/ks.yaml
     - kubernetes-dashboard/ks.yaml
-    - lldap/ks.yaml
-    - mosquitto/ks.yaml
-    - pgadmin/ks.yaml
     - plex/ks.yaml
-    - route-freebox/ks.yaml
-    - route-nas/ks.yaml
-    - vaultwarden/ks.yaml
-    - zigbee2mqtt/ks.yaml
-    - cloudflared/ks.yaml
     - shorturl/ks.yaml
-    - gitea-runner/ks.yaml
