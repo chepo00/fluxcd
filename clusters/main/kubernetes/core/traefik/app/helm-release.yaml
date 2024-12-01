@@ -41,7 +41,7 @@ spec:
         middlewares:
             forwardAuth:
                 - name: auth
-                  address: http://authelia.authelia.svc.cluster.local:9091/api/verify?rd=https://auth.${DOMAIN_0}
+                  address: http://authelia.auth.svc.cluster.local:9091/api/verify?rd=https://auth.${DOMAIN_0}
                   authResponseHeaders:
                       - Remote-User
                       - Remote-Group
