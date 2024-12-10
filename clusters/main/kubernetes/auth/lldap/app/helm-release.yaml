@@ -53,13 +53,16 @@ spec:
                 enabled: true
                 hosts:
                     - host: ldap.${DOMAIN_0}
+                      paths:
+                      - path: /
+                        pathType: Prefix
                 integrations:
                     certManager:
                         certificateIssuer: '${DOMAIN_0_BASE}-prod'
                         enabled: true
-                    #homepage:
-                    #    enabled: true
-                    #    group: System
+                    homepage:
+                       enabled: true
+                       group: System
                     traefik:
                         enabled: true
                         entrypoints:

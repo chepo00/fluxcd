@@ -19,13 +19,16 @@ spec:
                 enabled: true
                 hosts:
                     - host: zigbee2mqtt.${DOMAIN_0}
+                      paths:
+                      - path: /
+                        pathType: Prefix
                 integrations:
                     certManager:
                         certificateIssuer: '${DOMAIN_0_BASE}-prod'
                         enabled: true
-                    # homepage:
-                    #     enabled: true
-                    #     group: Smart Home
+                    homepage:
+                        enabled: true
+                        group: Smart Home
                     traefik:
                         enabled: true
                         entrypoints:

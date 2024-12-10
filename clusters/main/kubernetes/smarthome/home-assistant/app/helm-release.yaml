@@ -20,13 +20,16 @@ spec:
                 enabled: true
                 hosts:
                     - host: home.${DOMAIN_0}
+                      paths:
+                      - path: /
+                        pathType: Prefix
                 integrations:
                     certManager:
                         certificateIssuer: '${DOMAIN_0_BASE}-prod'
                         enabled: true
-                    #homepage:
-                    #    enabled: true
-                    #    group: Smart Home
+                    homepage:
+                       enabled: true
+                       group: Smart Home
                     traefik:
                         allowCors: false
                         enabled: true

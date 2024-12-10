@@ -45,17 +45,20 @@ spec:
                 enabled: true
                 hosts:
                     - host: gitea.${DOMAIN_0}
+                      paths:
+                      - path: /
+                        pathType: Prefix
                 integrations:
                     certManager:
                         certificateIssuer: '${DOMAIN_0_BASE}-prod'
                         enabled: true
-                    # homepage:
-                    #     enabled: true
-                    #     group: Dev
-                    #     widget:
-                    #         custom:
-                    #             key: '${GITEA_HOMEPAGE_TOKEN}'
-                    #         enabled: true
+                    homepage:
+                        enabled: true
+                        group: Dev
+                        widget:
+                            custom:
+                                key: '${GITEA_HOMEPAGE_TOKEN}'
+                            enabled: true
                     traefik:
                         enabled: true
                         entrypoints:
